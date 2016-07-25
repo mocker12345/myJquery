@@ -43,6 +43,29 @@
         this[i].style[attr] = val;
       }
       return this;
+    },
+    hasClass: function (cla) {
+      for(var i = 0;i<this.length;i++){
+        if(this[i].className.match(/\scla\s/)) return true;
+          return false
+      }
+      return this;
+    },
+    addClass: function (cla) {
+      for(var i =0;i<this.length;i++){
+        if(!this[i].className.match(/\sclas\s/)){
+          this[i].className += '' +cla;
+        }
+      }
+      return this;
+    },
+    removeClass: function (cla) {
+      for (var i = 0;i<this.length;i++){
+        if(this[i].className.match(/\scla\s/)){
+          this[i].className = this[i].className.replace(''+cla,'');
+        }
+      }
+      return this;
     }
   };
   R.prototype.init.prototype = R.prototype;
