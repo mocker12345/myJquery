@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="mj.js"></script>
+</head>
+<body>
+  <div class="ran">
+
+  </div>
+
+  <div>
+    <ul>
+      <li class="cong">111</li>
+      <li class="jie">222</li>
+    </ul>
+  </div>
+  <script>
+    R('.ran').css('width',100+'px').css('height',100+'px').css('background-color','#000');
+    R('.ran').addClass('what');
+    console.log(R('.ran').hasClass('what'));
+    R('.ran').removeClass('what');
+    console.log(R('.cong').next());
+    console.log(R('.cong').prev());
+    console.log(R('.cong').parent());
+    console.log(R('.cong').parents());
+  </script>
+</body>
+</html>
