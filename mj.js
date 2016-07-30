@@ -17,6 +17,17 @@
                 return selector;
             }
             var selector = selector.trim();
+          if(typeof selector === 'object'){
+            selector = [selector];
+            for(var i = 0;i<selector.length;i++){
+              this[i] = selector[i];
+            }
+            this.length = selector.length;
+            return this;
+          }else if(typeof selector === 'function'){
+            R.ready(selector);
+            return;
+          }
             var elm;
             if (selector.charAt(0) === '#' && !selector.match(/\s/)) {
                 selector = selector.substring(1);
@@ -97,6 +108,12 @@
             return r;
         }
 
+    };
+    R.ready = function (fn){
+      d.addEventListener('DomContentLoaded', function () {
+        fn&fn();
+      },false);
+      d.removeEventListener('DomContentLoaded',fn,true);
     };
     function sibling(cur, dir) {
         while ((cur = cur[dir]) && cur.nodeType !== 1) {
