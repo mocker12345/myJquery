@@ -116,7 +116,26 @@
     d.removeEventListener('DomContentLoaded', fn, true);
   };
   R.each = function (obj, callback) {
-
+    //遍历R对象
+    var length = obj.length;
+    var constuct = obj.constructor;
+    var i = 0;
+    if(constuct === window.R){
+      for(;i<length;i++){
+        var val = callback.call(obj[i],i,obj[i]);
+        if(val === false) break;
+      }
+    }else if(isArray(obj)){
+      for (;i<length;i++){
+        var val = callback.call(obj[i],i,obj[i]);
+        if (val === false) break;
+      }
+    } else{
+      for(i in obj){
+        var val = callback.call(obj[i],i,obj[i]);
+        if (val === false) break;
+      }
+    }
   };
   function sibling(cur, dir) {
     while ((cur = cur[dir]) && cur.nodeType !== 1) {

@@ -25,6 +25,21 @@
     console.log(R('.cong').prev());
     console.log(R('.cong').parent());
     console.log(R('.cong').parents());
+    var a = [1,2,3,4];
+    R.each(a, function (index,item) {
+      console.log(index,item);
+    });
+    var b = {
+      one:"item1",
+      two:"item2",
+      three:"item3"
+    };
+    R.each(b, function (index,item) {
+      console.log(index,item);
+    });
+    R.each(R("li"),function (index,item) {
+      console.log(index,item);
+    })
   </script>
 </body>
 </html>
