@@ -106,7 +106,28 @@
       }
       r.length = i;
       return r;
+    },
+    find: function (selector) {
+      if (!selector)return;
+      var content = this.selector;
+      return new R(content + " " + selector)
+    },
+    last: function (selector) {
+      if (!selector)return;
+      var num = this.length - 1;
+      return new R(this[num]);
+    },
+    eq: function (num) {
+      var num = num < 0 ? (this.length - 1) : num;
+      console.log(num);
+      return new R(this[num]);
+    },
+    get: function (num) {
+      var num = num < 0 ? (this.length - 1) : num;
+      console.log(num);
+      return this[num];
     }
+
 
   };
   R.ready = function (fn) {
@@ -116,27 +137,97 @@
     d.removeEventListener('DomContentLoaded', fn, true);
   };
   R.each = function (obj, callback) {
-    //遍历R对象
+
     var length = obj.length;
     var constuct = obj.constructor;
     var i = 0;
-    if(constuct === window.R){
-      for(;i<length;i++){
-        var val = callback.call(obj[i],i,obj[i]);
-        if(val === false) break;
-      }
-    }else if(isArray(obj)){
-      for (;i<length;i++){
-        var val = callback.call(obj[i],i,obj[i]);
+    if (constuct === window.R) {
+      //遍历R对象
+      for (; i < length; i++) {
+        var val = callback.call(obj[i], i, obj[i]);
         if (val === false) break;
       }
-    } else{
-      for(i in obj){
-        var val = callback.call(obj[i],i,obj[i]);
+    } else if (isArray(obj)) {
+      for (; i < length; i++) {
+        var val = callback.call(obj[i], i, obj[i]);
+        if (val === false) break;
+      }
+    } else {
+      for (i in obj) {
+        var val = callback.call(obj[i], i, obj[i]);
         if (val === false) break;
       }
     }
   };
+  R.get = function (url, sucBack, complete) {
+    var options = {
+      url: url,
+      success: sucBack,
+      complete: complete
+    };
+    ajax(options);
+  };
+  R.post = function (url, data, sucBack, complete) {
+    var options = {
+      url: url,
+      data: data,
+      type: 'POST',
+      success: sucBack,
+      complete: complete
+    };
+    ajax(options);
+  };
+  function ajax(options) {
+    var defaultOptions = {
+      url: false,
+      data: false,
+      type: 'GET',
+      success: false,
+      complete: false
+    };
+    for (var i in options) {
+      if (options[i] === undefined) {
+        options[i] = defaultOptions[i]
+      }
+    }
+    var xhr = new XMLHttpRequest();
+    var url = options.url;
+    xhr.open(options.type, url);
+    xhr.onreadystatechange = onStateChange;
+    if (options.type === 'POST') {
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    }
+    xhr.send(options.data ? options.data : null);
+    function onStateChange() {
+      if (xhr.readyState == 4) {
+        var result,
+          status = xhr.status;
+
+        if ((status >= 200 && status < 300) || status == 304) {
+          result = xhr.responseText;
+          if (window.JSON) {
+            result = JSON.parse(result);
+          } else {
+            result = eval('(' + result + ')');
+          }
+          ajaxSuccess(result, xhr)
+        } else {
+          console.log("ERR", xhr.status);
+        }
+      }
+    }
+    function ajaxSuccess(data,xhr){
+      var status = 'success';
+      options.success && options.success(data, options, status, xhr)
+      ajaxComplete(status)
+    }
+    function ajaxComplete(status) {
+      options.complete && options.complete(status);
+    }
+
+
+  }
+
   function sibling(cur, dir) {
     while ((cur = cur[dir]) && cur.nodeType !== 1) {
     }
